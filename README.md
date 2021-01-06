@@ -20,7 +20,9 @@ npm install --save-dev phosphor-svelte
 
 ```html
 <script>
-	import { Horse, Heart, Cube } from "phosphor-svelte";
+  import { Horse, Heart } from "phosphor-svelte";
+  // or
+  import Cube from "phosphor-svelte/lib/Cube"; // for faster compiling
 </script>
 
 <Horse />

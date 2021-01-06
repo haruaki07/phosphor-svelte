@@ -1,49 +1,42 @@
 {
-	"name": "phosphor-svelte",
-	"version": "0.2.0",
-	"description": "A clean and friendly icon family for Svelte",
-	"svelte": "src/index.js",
-	"module": "index.mjs",
-	"main": "index.js",
-	"files": [
-		"src",
-		"index.js",
-		"index.mjs"
-	],
-	"scripts": {
-		"build": "npm run build:icon && npm run build:rollup",
-		"build:rollup": "rollup -c",
-		"build:icon": "node ./build.js",
-		"prepublishOnly": "npm run build"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/haruaki07/phosphor-svelte.git"
-	},
-	"keywords": [
-		"icons",
-		"icon-pack",
-		"web",
-		"html",
-		"css",
-		"svg",
-		"svg-icons",
-		"icon-font"
-	],
-	"author": "haruaki07",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/haruaki07/phosphor-svelte/issues"
-	},
-	"homepage": "https://phosphoricons.com",
-	"devDependencies": {
-		"@rollup/plugin-node-resolve": "^9.0.0",
-		"chalk": "^4.1.0",
-		"fs-extra": "^9.0.1",
-		"log-update": "^4.0.0",
-		"rollup": "^2.0.0",
-		"rollup-plugin-svelte": "^6.0.0",
-		"rollup-plugin-terser": "^7.0.2",
-		"svelte": "^3.0.0"
-	}
+  "name": "phosphor-svelte",
+  "version": "0.3.0",
+  "description": "A clean and friendly icon family for Svelte",
+  "svelte": "./lib/index.js",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "npm run build:icon",
+    "build:icon": "node src/build.js",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haruaki07/phosphor-svelte.git"
+  },
+  "keywords": [
+    "icons",
+    "icon-pack",
+    "web",
+    "html",
+    "css",
+    "svg",
+    "svg-icons",
+    "icon-font"
+  ],
+  "author": "haruaki07",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/haruaki07/phosphor-svelte/issues"
+  },
+  "homepage": "https://phosphoricons.com",
+  "devDependencies": {
+    "fs-extra": "^9.0.1",
+    "html-minifier-terser": "^5.1.1",
+    "log-update": "^4.0.0",
+    "svelte": "^3.0.0"
+  }
 }

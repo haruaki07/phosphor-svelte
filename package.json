@@ -9,9 +9,9 @@
     "lib"
   ],
   "scripts": {
-    "build": "npm run build:icon",
+    "build": "yarn build:icon",
     "build:icon": "node src/build.js",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "yarn build"
   },
   "repository": {
     "type": "git",

@@ -13,7 +13,8 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - run: npm install
-      - run: npm publish --access public
+      - run: yarn install --frozen-lockfile
+      - run: yarn version --new-version "${GITHUB_REF:11}" --no-git-tag-version
+      - run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

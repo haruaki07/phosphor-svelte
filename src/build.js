@@ -11,7 +11,8 @@ const { definitionsTemplate, componentTemplate } = require("./template");
   const weightsWithoutRegular = weights.filter((w) => w !== "regular");
   const regulars = getIcons("regular");
 
-  fs.rmSync("lib", { recursive: true, force: true });
+  fs.removeSync("lib");
+  fs.copySync("src/lib", "lib");
   fs.ensureDirSync("lib");
 
   Promise.all(
@@ -59,17 +60,17 @@ const { definitionsTemplate, componentTemplate } = require("./template");
   ).then(() => {
     logUpdate.clear();
 
-    const index = icons
-      .map(
-        (icon) =>
-          `export { default as ${generateIconName(
-            icon.name
-          )} } from './${generateIconName(icon.name)}'`
-      )
-      .join("\n");
+    const index = icons.map(
+      (icon) =>
+        `export { default as ${generateIconName(
+          icon.name
+        )} } from './${generateIconName(icon.name)}';`
+    );
+    index.unshift("export { default as IconContext } from './IconContext';\n");
+
     const definitions = definitionsTemplate(icons);
 
-    fs.writeFileSync("./lib/index.js", index);
+    fs.writeFileSync("./lib/index.js", index.join("\n"));
     fs.writeFileSync("./lib/index.d.ts", definitions);
 
     console.log(`${passes} component${passes > 1 ? "s" : ""} generated`);

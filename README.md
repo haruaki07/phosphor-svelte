@@ -22,7 +22,7 @@ npm install --save-dev phosphor-svelte
 <script>
   import { Horse, Heart } from "phosphor-svelte";
   // or
-  import Cube from "phosphor-svelte/lib/Cube"; // for faster compiling
+  import Cube from "phosphor-svelte/lib/Cube"; // Recommended for faster compiling
 </script>
 
 <Horse />
@@ -36,6 +36,29 @@ npm install --save-dev phosphor-svelte
 - **size?**: `number | string` – Icon height & width. As with standard React elements, this can be a number, or a string with units in `px`, `%`, `em`, `rem`, `pt`, `cm`, `mm`, `in`.
 - **weight?**: `"thin" | "light" | "regular" | "bold" | "fill" | "duotone"` – Icon weight/style. Can also be used, for example, to "toggle" an icon's state: a rating component could use Stars with `weight="regular"` to denote an empty star, and `weight="fill"` to denote a filled star.
 - **mirrored?**: `boolean` – Flip the icon horizontally. Can be useful in RTL languages where normal icon orientation is not appropriate.
+
+### Context
+
+Apply default style to all icons. Create an IconContext at the root of the app (or anywhere above the icons in the tree) and pass in a configuration object with props to be applied by default to all icons inside context:
+
+```html
+<script>
+  import IconContext from "phosphor-svelte/lib/IconContext";
+  // or
+  // import { IconContext } from "phosphor-svelte";
+
+  import Cube from "phosphor-svelte/lib/Cube";
+  import Horse from "phosphor-svelte/lib/Horse";
+  import Heart from "phosphor-svelte/lib/Heart";
+</script>
+
+<IconContext
+  values={{ color: 'limegreen', size: 32, mirrored: false, weight: 'bold' }}>
+  <Horse /> <!-- I'm lime-green, 32px, and bold! -->
+  <Heart /> <!-- Me too! -->
+  <Cube color="red" /> <!-- red -->
+</IconContext>
+```
 
 ### Composability
 
@@ -71,7 +94,7 @@ The following will cause the Cube icon to rotate and pulse:
 
 MIT © [Phosphor Icons](https://github.com/phosphor-icons)
 
-## Inspiration
+## Knowledge
 
 - [Phosphor React](https://github.com/phosphor-icons/phosphor-react/)
 - [Carbon Icons Svelte](https://github.com/IBM/carbon-icons-svelte/)

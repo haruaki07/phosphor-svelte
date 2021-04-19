@@ -33,6 +33,9 @@
     "url": "https://github.com/haruaki07/phosphor-svelte/issues"
   },
   "homepage": "https://phosphoricons.com",
+  "peerDependencies": {
+    "svelte": ">=3"
+  },
   "devDependencies": {
     "fs-extra": "^9.0.1",
     "html-minifier-terser": "^5.1.1",

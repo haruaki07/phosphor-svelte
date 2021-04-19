@@ -19,7 +19,8 @@ function componentTemplate(types) {
   height={size}
   fill={color}
   transform={mirrored ? "scale(-1, 1)" : undefined} 
-  viewBox="0 0 256 256">
+  viewBox="0 0 256 256"
+  {...$$restProps}>
   <slot/>
   <rect width="256" height="256" fill="none" />
 ${types
@@ -39,33 +40,10 @@ ${types
 }
 
 function definitionsTemplate(icons) {
-  return `import { SvelteComponent } from "./shared";
-
-declare type Weight =
-  | "bold"
-  | "duotone"
-  | "fill"
-  | "light"
-  | "thin"
-  | "regular";
-
-export interface IconProps {
-  /** @type {string} [color="currentColor"] */
-  color?: string;
-  /** @type {number|string} [size="1em"] */
-  size?: number | string;
-  /** @type {string} [id="regular"] */
-  weight?: Weight;
-  /** @type {boolean} [mirrored=false] */
-  mirrored?: boolean;
-}
-
-type IconContextValue = Required<
-  Pick<IconProps, "color" | "size" | "weight" | "mirrored">
->;
+  return `import { SvelteComponent, IconProps } from "./shared";
 
 export interface IconContextProps {
-  values: IconContextValue;
+  values: Required<IconProps>;
 }
 
 export declare class IconContext extends SvelteComponent<IconContextProps> {}

@@ -2,9 +2,11 @@ const fs = require("fs-extra");
 const path = require("path");
 const minify = require("html-minifier-terser").minify;
 
+const ASSETS_PATH = "phosphor-icons/assets";
+
 function getWeights() {
   return fs
-    .readdirSync("assets", { withFileTypes: true })
+    .readdirSync(ASSETS_PATH, { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name);
 }
@@ -38,7 +40,7 @@ function readSVG(filepath) {
 }
 
 function getIcons(weight) {
-  return fs.readdirSync(path.join("assets", weight));
+  return fs.readdirSync(path.join(ASSETS_PATH, weight));
 }
 
 module.exports = {
@@ -46,4 +48,5 @@ module.exports = {
   generateIconName,
   getWeights,
   getIcons,
+  ASSETS_PATH
 };

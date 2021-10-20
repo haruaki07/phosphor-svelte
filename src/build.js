@@ -1,7 +1,7 @@
 const fs = require("fs-extra");
 const path = require("path");
 const logUpdate = require("log-update");
-const { getIcons, generateIconName, readSVG, getWeights } = require("./utils");
+const { getIcons, generateIconName, readSVG, getWeights, ASSETS_PATH } = require("./utils");
 const { definitionsTemplate, componentTemplate } = require("./template");
 
 (() => {
@@ -13,7 +13,6 @@ const { definitionsTemplate, componentTemplate } = require("./template");
 
   fs.removeSync("lib");
   fs.copySync("src/lib", "lib");
-  fs.ensureDirSync("lib");
 
   Promise.all(
     regulars.map((reg) => {
@@ -28,7 +27,7 @@ const { definitionsTemplate, componentTemplate } = require("./template");
           if (filename.slice(0, -1).join("-") === regular) {
             types.push({
               weight: filename.pop(),
-              path: readSVG(path.join("assets", weight, file)),
+              path: readSVG(path.join(ASSETS_PATH, weight, file)),
             });
           }
         });
@@ -36,7 +35,7 @@ const { definitionsTemplate, componentTemplate } = require("./template");
 
       types.push({
         weight: "regular",
-        path: readSVG(path.join("assets", "regular", reg)),
+        path: readSVG(path.join(ASSETS_PATH, "regular", reg)),
       });
 
       icons.push({ name: regular, weights: types });

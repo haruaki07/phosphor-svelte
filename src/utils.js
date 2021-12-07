@@ -22,14 +22,8 @@ function readSVG(filepath) {
   return minify(
     fs
       .readFileSync(filepath, "utf-8")
-      .replace(/^.*<\?xml.*/g, "")
       .replace(/<svg.*/g, "")
-      .replace(/<\/svg>/g, "")
-      .replace(
-        /<rect width="25[\d,\.]+" height="25[\d,\.]+" fill="none".*\/>/g,
-        ""
-      )
-      .replace(/<title.*/, ""),
+      .replace(/<\/svg>/g, ""),
     {
       collapseWhitespace: true,
       removeEmptyAttributes: true,
@@ -48,5 +42,5 @@ module.exports = {
   generateIconName,
   getWeights,
   getIcons,
-  ASSETS_PATH
+  ASSETS_PATH,
 };

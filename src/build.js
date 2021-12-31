@@ -1,8 +1,8 @@
-const fs = require("fs-extra");
-const path = require("path");
-const logUpdate = require("log-update");
-const { getIcons, generateIconName, readSVG, getWeights, ASSETS_PATH } = require("./utils");
-const { definitionsTemplate, componentTemplate } = require("./template");
+import fs from "fs-extra";
+import path from "path";
+import logUpdate from "log-update";
+import { getIcons, generateIconName, readSVG, getWeights, ASSETS_PATH } from "./utils.js";
+import { definitionsTemplate, componentTemplate } from "./template.js";
 
 (() => {
   let passes = 0;

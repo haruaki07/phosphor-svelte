@@ -1,6 +1,6 @@
-const { generateIconName } = require("./utils");
+import { generateIconName } from "./utils.js";
 
-function componentTemplate(types) {
+export function componentTemplate(types) {
   let componentString = `<!-- GENERATED FILE -->
 <script>
   import { getContext } from "svelte";
@@ -39,7 +39,7 @@ ${types
   return componentString;
 }
 
-function definitionsTemplate(icons) {
+export function definitionsTemplate(icons) {
   return `import { SvelteComponent, IconProps } from "./shared";
 
 export interface IconContextProps {
@@ -57,8 +57,3 @@ ${icons
   )
   .join("\n")}`;
 }
-
-module.exports = {
-  componentTemplate,
-  definitionsTemplate,
-};

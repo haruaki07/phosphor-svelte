@@ -1,6 +1,6 @@
-const { readFileSync } = require("fs");
-const { getWeights, getIcons, ASSETS_PATH } = require("../src/utils");
-const { resolve } = require("path");
+import { readFileSync } from "fs";
+import { getWeights, getIcons, ASSETS_PATH } from "../src/utils";
+import { resolve } from "path";
 
 (() => {
   const weights = getWeights();

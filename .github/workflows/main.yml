@@ -13,7 +13,7 @@ jobs:
           submodules: 'true'
       - uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 14
           registry-url: https://registry.npmjs.org/
       - run: yarn install --frozen-lockfile
       - run: yarn version --new-version "${GITHUB_REF:11}" --no-git-tag-version

@@ -24,7 +24,7 @@ export function readSVG(filepath) {
   return minify(
     fs
       .readFileSync(filepath, "utf-8")
-      .replace(/<svg.*/g, "")
+      .replace(/<svg.*?>/g, "")
       .replace(/<\/svg>/g, ""),
     {
       collapseWhitespace: true,

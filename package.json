@@ -1,6 +1,6 @@
 {
   "name": "phosphor-svelte",
-  "version": "1.1.2",
+  "version": "1.2.1",
   "description": "A clean and friendly icon family for Svelte",
   "svelte": "./lib/index.js",
   "main": "./lib/index.js",

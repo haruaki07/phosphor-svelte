@@ -5,8 +5,8 @@ import { resolve } from "path";
 (() => {
   const weights = getWeights();
   let patterns = {
-    xmlTag: { pattern: /^.*<\?xml.*/g, match: 0 },
-    svgTagOpen: { pattern: /<svg.*/g, match: 0 },
+    xmlTag: { pattern: /^.*<\?xml.*?>/g, match: 0 },
+    svgTagOpen: { pattern: /<svg.*?>/g, match: 0 },
     svgTagClose: { pattern: /<\/svg>/g, match: 0 },
     svgRectTag: {
       pattern: /<rect width="25[\d,\.]+" height="25[\d,\.]+" fill="none".*\/>/g,

@@ -57,3 +57,7 @@ export async function readSVG(filepath) {
 export async function getIcons(assetsDir, weight) {
   return fs.readdir(join(assetsDir, weight));
 }
+
+export function getCurrentDirname() {
+  return new URL(".", import.meta.url).pathname;
+}

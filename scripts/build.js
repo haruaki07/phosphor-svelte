@@ -3,10 +3,16 @@ import logUpdate from "log-update";
 import pMap, { pMapSkip } from "p-map";
 import path from "path";
 import { componentTemplate, definitionsTemplate } from "./template.js";
-import { generateIconName, getIcons, getWeights, readSVG } from "./utils.js";
+import {
+  generateIconName,
+  getCurrentDirname,
+  getIcons,
+  getWeights,
+  readSVG,
+} from "./utils.js";
 
 const isTTY = process.stdout.isTTY;
-const __dirname = new URL(".", import.meta.url).pathname;
+const __dirname = getCurrentDirname();
 
 const rootDir = path.resolve(__dirname, "..");
 const outputDir = path.join(rootDir, "lib");
@@ -58,17 +64,18 @@ async function generateComponents(icon, weightVariants) {
     let componentString = componentTemplate(iconWeights);
     let componentName = generateIconName(iconName);
 
-    await fs.ensureDir(`./lib/${componentName}`);
+    const cmpDir = path.join(outputDir, componentName);
+    await fs.ensureDir(cmpDir);
     await fs.writeFile(
-      `./lib/${componentName}/${componentName}.svelte`,
+      path.join(cmpDir, `${componentName}.svelte`),
       componentString
     );
     await fs.writeFile(
-      `./lib/${componentName}/index.js`,
+      path.join(cmpDir, "index.js"),
       `import ${componentName} from "./${componentName}.svelte"\nexport default ${componentName};`
     );
     await fs.writeFile(
-      `lib/${componentName}/index.d.ts`,
+      path.join(cmpDir, "index.d.ts"),
       `export { ${componentName} as default } from "../";\n`
     );
 
@@ -109,8 +116,8 @@ async function main() {
 
   const definitionsString = definitionsTemplate(components);
 
-  await fs.writeFile("./lib/index.js", indexString.join("\n"));
-  await fs.writeFile("./lib/index.d.ts", definitionsString);
+  await fs.writeFile(path.join(outputDir, "index.js"), indexString.join("\n"));
+  await fs.writeFile(path.join(outputDir, "index.d.ts"), definitionsString);
 
   if (isTTY) {
     logUpdate.clear();

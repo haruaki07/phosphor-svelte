@@ -8,15 +8,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
-          submodules: 'true'
-      - uses: actions/setup-node@v1
+          submodules: "true"
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version-file: ".node-version"
           registry-url: https://registry.npmjs.org/
+          cache: "yarn"
       - run: yarn install --frozen-lockfile
-      - run: yarn version --new-version "${GITHUB_REF:11}" --no-git-tag-version
       - run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

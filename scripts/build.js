@@ -42,7 +42,7 @@ function logProgress(str) {
  * @param {string} icon - icon file name, eg. activity.svg
  * @param {string[]} weightVariants - all icon weights
  */
-async function generateComponents(icon, weightVariants) {
+export async function generateComponents(icon, weightVariants) {
   try {
     const p = logProgress(`Generating ${icon}...`);
     const iconName = icon.slice(0, -4); // activity.svg -> activity
@@ -90,7 +90,7 @@ async function generateComponents(icon, weightVariants) {
   }
 }
 
-async function main() {
+export async function main() {
   let concurrency = 5;
 
   const weights = await getWeights(assetsDir);
@@ -128,4 +128,4 @@ async function main() {
   console.log(`✔ ${passes} component${passes > 1 ? "s" : ""} generated`);
 }
 
-main();
+if (process.env.NODE_ENV !== "test") main();

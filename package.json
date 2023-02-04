@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "build": "yarn build:icon",
-    "build:icon": "node src/build.js",
+    "build:icon": "node scripts/build.js",
     "prepublishOnly": "yarn build"
   },
   "repository": {

@@ -1,4 +1,5 @@
-import { SvelteComponentTyped } from "svelte";
+import type { SvelteComponentTyped } from "svelte";
+import type { SVGAttributes } from "svelte/elements";
 
 declare type Weight =
   | "bold"
@@ -8,7 +9,7 @@ declare type Weight =
   | "thin"
   | "regular";
 
-export interface IconProps {
+export interface IconProps extends SVGAttributes<SVGSVGElement> {
   /**
    * @type {string}
    * @default "currentColor"
@@ -20,7 +21,7 @@ export interface IconProps {
    */
   size?: number | string;
   /**
-   * @type {string}
+   * @type {Weight}
    * @default "regular"
    */
   weight?: Weight;
@@ -31,10 +32,6 @@ export interface IconProps {
   mirrored?: boolean;
 }
 
-export class SvelteComponent<Props = {}> extends SvelteComponentTyped<
-  Props,
-  any,
-  {
-    default?: {};
-  }
-> {}
+export class SvelteComponent<
+  Props extends Record<string, any>
+> extends SvelteComponentTyped<Props> {}

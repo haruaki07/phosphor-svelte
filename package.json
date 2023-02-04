@@ -41,6 +41,7 @@
     "fs-extra": "^9.0.1",
     "html-minifier-terser": "^5.1.1",
     "log-update": "^4.0.0",
-    "svelte": "^3.0.0"
+    "p-map": "^5.5.0",
+    "svelte": "^3.55.1"
   }
 }

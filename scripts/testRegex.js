@@ -1,9 +1,14 @@
-import { readFileSync } from "fs";
-import { getWeights, getIcons, ASSETS_PATH } from "../src/utils";
+import fs from "fs-extra";
 import { resolve } from "path";
 
+const { readFileSync, readdirSync } = fs;
+
 (() => {
-  const weights = getWeights();
+  const weights = readdirSync(resolve("phosphor-icons", "assets"), {
+    withFileTypes: true,
+  })
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => dirent.name);
   let patterns = {
     xmlTag: { pattern: /^.*<\?xml.*?>/g, match: 0 },
     svgTagOpen: { pattern: /<svg.*?>/g, match: 0 },
@@ -17,10 +22,12 @@ import { resolve } from "path";
   };
 
   for (const weight of weights) {
-    const iconsOfWeight = getIcons(weight);
+    const iconsOfWeight = readdirSync(
+      resolve("phosphor-icons", "assets", weight)
+    );
     for (const iconFileName of iconsOfWeight) {
       const rawSVG = readFileSync(
-        resolve(ASSETS_PATH, weight, iconFileName),
+        resolve("phosphor-icons", "assets", weight, iconFileName),
         "utf-8"
       );
       for (const [patternName, { pattern }] of Object.entries(patterns)) {

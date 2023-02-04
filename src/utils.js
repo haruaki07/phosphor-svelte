@@ -1,18 +1,24 @@
 import fs from "fs-extra";
+import { minify } from "html-minifier-terser";
 import { join } from "path";
-import htmlMinifierTerser from "html-minifier-terser";
 
-const { minify } = htmlMinifierTerser;
+/**
+ * @param {string} assetsDir
+ * @returns
+ */
+export async function getWeights(assetsDir) {
+  const dirents = await fs.readdir(assetsDir, { withFileTypes: true });
 
-export const ASSETS_PATH = "phosphor-icons/assets";
-
-export function getWeights() {
-  return fs
-    .readdirSync(ASSETS_PATH, { withFileTypes: true })
+  return dirents
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name);
 }
 
+/**
+ *
+ * @param {string} str
+ * @returns
+ */
 export function generateIconName(str) {
   const name = str.split("-");
   return name
@@ -20,10 +26,17 @@ export function generateIconName(str) {
     .join("");
 }
 
-export function readSVG(filepath) {
+/**
+ *
+ * @param {string} filepath
+ * @returns
+ */
+export async function readSVG(filepath) {
+  const svg = await fs.readFile(filepath, "utf-8");
+
+  // prettier-ignore
   return minify(
-    fs
-      .readFileSync(filepath, "utf-8")
+    svg
       .replace(/<svg.*?>/g, "")
       .replace(/<\/svg>/g, ""),
     {
@@ -35,6 +48,12 @@ export function readSVG(filepath) {
   );
 }
 
-export function getIcons(weight) {
-  return fs.readdirSync(join(ASSETS_PATH, weight));
+/**
+ *
+ * @param {string} assetsDir
+ * @param {string} weight
+ * @returns
+ */
+export async function getIcons(assetsDir, weight) {
+  return fs.readdir(join(assetsDir, weight));
 }

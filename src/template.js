@@ -1,16 +1,25 @@
-import { generateIconName } from "./utils.js";
-
-export function componentTemplate(types) {
+/**
+ *
+ * @param {{ weight: string, svgPath: string }[]} iconWeights
+ * @returns
+ */
+export function componentTemplate(iconWeights) {
   let componentString = `<!-- GENERATED FILE -->
 <script>
   import { getContext } from "svelte";
 
-  const ctx = getContext("iconCtx") || {};
+  const {
+    weight: ctxWeight,
+    color: ctxColor,
+    size: ctxSize,
+    mirrored: ctxMirrored,
+    ...restCtx
+  } = getContext("iconCtx") || {};
 
-  export let weight = ctx.weight ?? "regular";
-  export let color = ctx.color ?? "currentColor";
-  export let size = ctx.size ?? "1em";
-  export let mirrored = ctx.mirrored || false;
+  export let weight = ctxWeight ?? "regular";
+  export let color = ctxColor ?? "currentColor";
+  export let size = ctxSize ?? "1em";
+  export let mirrored = ctxMirrored || false;
 </script>
 
 <svg 
@@ -20,16 +29,17 @@ export function componentTemplate(types) {
   fill={color}
   transform={mirrored ? "scale(-1, 1)" : undefined} 
   viewBox="0 0 256 256"
+  {...restCtx}
   {...$$restProps}>
   <slot/>
   <rect width="256" height="256" fill="none" />
-${types
-  .map(({ weight, path }, i) => {
+${iconWeights
+  .map(({ weight, svgPath }, i) => {
     const cond =
       i === 0
         ? `{#if weight === "${weight}"}`
         : `{:else if weight === "${weight}"}`;
-    return `  ${cond}\n    ${path.trim()}\n`;
+    return `  ${cond}\n    ${svgPath.trim()}\n`;
   })
   .join("")}  {:else}
     {(console.error('Unsupported icon weight. Choose from "thin", "light", "regular", "bold", "fill", or "duotone".'), "")}
@@ -39,21 +49,31 @@ ${types
   return componentString;
 }
 
-export function definitionsTemplate(icons) {
+/**
+ *
+ * @param {{
+ *   name: string,
+ *   iconName: string,
+ *   weights: {
+ *     svgPath: string,
+ *     weight: string
+ *   }[]
+ * }[]} components
+ * @returns
+ */
+export function definitionsTemplate(components) {
   return `import { SvelteComponent, IconProps } from "./shared";
 
 export interface IconContextProps {
-  values: Required<IconProps>;
+  values: IconProps;
 }
 
 export declare class IconContext extends SvelteComponent<IconContextProps> {}
 
-${icons
+${components
   .map(
-    (icon) =>
-      `export declare class ${generateIconName(
-        icon.name
-      )} extends SvelteComponent<IconProps> {}`
+    (cmp) =>
+      `export declare class ${cmp.name} extends SvelteComponent<IconProps> {}`
   )
   .join("\n")}`;
 }

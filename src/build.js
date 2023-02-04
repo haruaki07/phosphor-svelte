@@ -1,78 +1,124 @@
 import fs from "fs-extra";
-import path from "path";
 import logUpdate from "log-update";
-import { getIcons, generateIconName, readSVG, getWeights, ASSETS_PATH } from "./utils.js";
-import { definitionsTemplate, componentTemplate } from "./template.js";
+import pMap, { pMapSkip } from "p-map";
+import path from "path";
+import { componentTemplate, definitionsTemplate } from "./template.js";
+import { generateIconName, getIcons, getWeights, readSVG } from "./utils.js";
 
-(() => {
-  let passes = 0;
-  const icons = [];
-  const weights = getWeights();
-  const weightsWithoutRegular = weights.filter((w) => w !== "regular");
-  const regulars = getIcons("regular");
+const isTTY = process.stdout.isTTY;
+const __dirname = new URL(".", import.meta.url).pathname;
 
-  fs.removeSync("lib");
-  fs.copySync("src/lib", "lib");
+const rootDir = path.resolve(__dirname, "..");
+const outputDir = path.join(rootDir, "lib");
+const assetsDir = path.join(rootDir, "phosphor-icons", "assets");
 
-  Promise.all(
-    regulars.map((reg) => {
-      logUpdate(`Generating ${reg}`);
-      const types = [];
-      const regular = reg.slice(0, -4); // activity.svg -> activity
+/** @type {string[]} */
+let progress = [];
 
-      weightsWithoutRegular.forEach((weight) => {
-        getIcons(weight).forEach((file) => {
-          // activity-bold.svg -> ['activity', 'bold']
-          const filename = file.slice(0, -4).split("-");
-          if (filename.slice(0, -1).join("-") === regular) {
-            types.push({
-              weight: filename.pop(),
-              path: readSVG(path.join(ASSETS_PATH, weight, file)),
-            });
-          }
-        });
-      });
+/** @param {string} str */
+function logProgress(str) {
+  if (isTTY) {
+    progress.push(str);
+    logUpdate(progress.join("\n"));
+  } else {
+    console.log(str);
+  }
 
-      types.push({
-        weight: "regular",
-        path: readSVG(path.join(ASSETS_PATH, "regular", reg)),
-      });
+  return {
+    done: () => {
+      if (isTTY) progress = progress.filter((p) => p !== str);
+    },
+  };
+}
 
-      icons.push({ name: regular, weights: types });
+/**
+ *
+ * @param {string} icon - icon file name, eg. activity.svg
+ * @param {string[]} weightVariants - all icon weights
+ */
+async function generateComponents(icon, weightVariants) {
+  try {
+    const p = logProgress(`Generating ${icon}...`);
+    const iconName = icon.slice(0, -4); // activity.svg -> activity
 
-      let componentString = componentTemplate(types);
-      let iconName = generateIconName(regular);
+    const iconWeights = await pMap(weightVariants, async (weight) => {
+      let fileName = iconName;
+      if (weight !== "regular") fileName += `-${weight}`;
 
-      fs.ensureDirSync(`./lib/${iconName}`);
-      fs.writeFileSync(`./lib/${iconName}/${iconName}.svelte`, componentString);
-      fs.writeFileSync(
-        `./lib/${iconName}/index.js`,
-        `import ${iconName} from "./${iconName}.svelte"\nexport default ${iconName};`
-      );
-      fs.writeFileSync(
-        `lib/${iconName}/index.d.ts`,
-        `export { ${iconName} as default } from "../";\n`
+      const svgPath = await readSVG(
+        path.join(assetsDir, weight, `${fileName}.svg`)
       );
 
-      passes++;
-    })
-  ).then(() => {
-    logUpdate.clear();
+      return {
+        weight,
+        svgPath,
+      };
+    });
 
-    const index = icons.map(
-      (icon) =>
-        `export { default as ${generateIconName(
-          icon.name
-        )} } from './${generateIconName(icon.name)}';`
+    let componentString = componentTemplate(iconWeights);
+    let componentName = generateIconName(iconName);
+
+    await fs.ensureDir(`./lib/${componentName}`);
+    await fs.writeFile(
+      `./lib/${componentName}/${componentName}.svelte`,
+      componentString
     );
-    index.unshift("export { default as IconContext } from './IconContext';\n");
+    await fs.writeFile(
+      `./lib/${componentName}/index.js`,
+      `import ${componentName} from "./${componentName}.svelte"\nexport default ${componentName};`
+    );
+    await fs.writeFile(
+      `lib/${componentName}/index.d.ts`,
+      `export { ${componentName} as default } from "../";\n`
+    );
 
-    const definitions = definitionsTemplate(icons);
+    p.done();
+    return {
+      iconName: icon,
+      name: componentName,
+      weights: iconWeights,
+    };
+  } catch (e) {
+    return pMapSkip;
+  }
+}
 
-    fs.writeFileSync("./lib/index.js", index.join("\n"));
-    fs.writeFileSync("./lib/index.d.ts", definitions);
+async function main() {
+  let concurrency = 5;
 
-    console.log(`${passes} component${passes > 1 ? "s" : ""} generated`);
+  const weights = await getWeights(assetsDir);
+  const regularIcons = await getIcons(assetsDir, "regular");
+
+  await fs.remove(outputDir);
+  await fs.copy(path.join(rootDir, "src", "lib"), outputDir);
+
+  const components = await pMap(
+    regularIcons,
+    (icon) => generateComponents(icon, weights),
+    {
+      concurrency,
+    }
+  );
+
+  const indexString = components.map(
+    (cmp) => `export { default as ${cmp.name} } from './${cmp.name}';`
+  );
+  indexString.unshift(
+    "export { default as IconContext } from './IconContext';\n"
+  );
+
+  const definitionsString = definitionsTemplate(components);
+
+  await fs.writeFile("./lib/index.js", indexString.join("\n"));
+  await fs.writeFile("./lib/index.d.ts", definitionsString);
+
+  if (isTTY) {
+    logUpdate.clear();
     logUpdate.done();
-  });
-})();
+  }
+
+  const passes = components.length;
+  console.log(`✔ ${passes} component${passes > 1 ? "s" : ""} generated`);
+}
+
+main();

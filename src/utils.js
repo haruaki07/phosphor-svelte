@@ -4,7 +4,7 @@ import htmlMinifierTerser from "html-minifier-terser";
 
 const { minify } = htmlMinifierTerser;
 
-export const ASSETS_PATH = "phosphor-icons/assets";
+export const ASSETS_PATH = "core/assets";
 
 export function getWeights() {
   return fs

@@ -11,6 +11,9 @@ export function componentTemplate(types) {
   export let color = ctx.color ?? "currentColor";
   export let size = ctx.size ?? "1em";
   export let mirrored = ctx.mirrored || false;
+
+  let className = '';
+  export { className as class };
 </script>
 
 <svg 
@@ -18,6 +21,7 @@ export function componentTemplate(types) {
   width={size}
   height={size}
   fill={color}
+  class={className}
   transform={mirrored ? "scale(-1, 1)" : undefined} 
   viewBox="0 0 256 256"
   {...$$restProps}>

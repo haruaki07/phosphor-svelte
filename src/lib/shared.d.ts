@@ -42,4 +42,4 @@ export class SvelteComponent<Props = {}> extends SvelteComponentTyped<
   {
     default?: {};
   }
-> { }
+> {}

@@ -1,5 +1,5 @@
 {
-  "name": "phosphor-svelte",
+  "name": "@benjineering/phosphor-svelte",
   "version": "1.2.1",
   "description": "A clean and friendly icon family for Svelte",
   "svelte": "./lib/index.js",
@@ -11,8 +11,7 @@
   ],
   "scripts": {
     "build": "yarn build:icon",
-    "build:icon": "node src/build.js",
-    "prepublishOnly": "yarn build"
+    "build:icon": "node src/build.js"
   },
   "repository": {
     "type": "git",

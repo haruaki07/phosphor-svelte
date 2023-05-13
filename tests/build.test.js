@@ -45,7 +45,7 @@ beforeAll(async (ctx) => {
 
   vol.fromNestedJSON(
     {
-      "/tmp/phosphor-icons/assets": {
+      "/tmp/core/assets": {
         regular: {
           "minus.svg": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path d="M216,136H40a8,8,0,0,1,0-16H216a8,8,0,0,1,0,16Z"/></svg>`,
           "circle.svg": `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path d="M128,232A104,104,0,1,1,232,128,104.2,104.2,0,0,1,128,232Zm0-192a88,88,0,1,0,88,88A88.1,88.1,0,0,0,128,40Z"/></svg>`,

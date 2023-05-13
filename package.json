@@ -11,8 +11,8 @@
   ],
   "scripts": {
     "build": "yarn build:icon",
-    "build:icon": "node src/build.js",
-    "prepublishOnly": "yarn build"
+    "build:icon": "node scripts/build.js",
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -38,9 +38,16 @@
     "svelte": ">=3"
   },
   "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^2.0.2",
+    "@testing-library/svelte": "^3.2.2",
     "fs-extra": "^9.0.1",
     "html-minifier-terser": "^5.1.1",
+    "jsdom": "^21.1.0",
     "log-update": "^4.0.0",
-    "svelte": "^3.0.0"
+    "memfs": "^3.4.13",
+    "p-map": "^5.5.0",
+    "svelte": "^3.55.1",
+    "svelte-htm": "^1.2.0",
+    "vitest": "^0.28.4"
   }
 }

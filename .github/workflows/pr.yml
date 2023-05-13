@@ -1,12 +1,13 @@
-name: Publish
+name: PR
 
 on:
-  release:
-    types: [published]
+  pull-request:
 
 jobs:
-  build:
+  test:
+    name: Test
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
         with:
@@ -26,7 +27,3 @@ jobs:
 
       - name: Test
         run: yarn test
-
-      - run: yarn publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

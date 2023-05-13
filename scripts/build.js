@@ -16,7 +16,7 @@ const __dirname = getCurrentDirname();
 
 const rootDir = path.resolve(__dirname, "..");
 const outputDir = path.join(rootDir, "lib");
-const assetsDir = path.join(rootDir, "phosphor-icons", "assets");
+const assetsDir = path.join(rootDir, "core", "assets");
 
 /** @type {string[]} */
 let progress = [];

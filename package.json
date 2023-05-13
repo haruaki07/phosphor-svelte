@@ -12,7 +12,6 @@
   "scripts": {
     "build": "yarn build:icon",
     "build:icon": "node scripts/build.js",
-    "prepublishOnly": "yarn build",
     "test": "vitest run"
   },
   "repository": {

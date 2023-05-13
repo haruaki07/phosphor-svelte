@@ -1,0 +1,29 @@
+name: PR
+
+on:
+  pull-request:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: "true"
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: ".node-version"
+          registry-url: https://registry.npmjs.org/
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Test
+        run: yarn test

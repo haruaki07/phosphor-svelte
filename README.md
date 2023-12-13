@@ -1,6 +1,6 @@
 <img src="./meta/phosphor-mark-tight-yellow.png" width="128" align="right" />
 
-# phosphor-svelte
+phosphor-svelte
 
 Phosphor is a flexible icon family for interfaces, diagrams, presentations — whatever, really. More icons at [phosphoricons.com](https://phosphoricons.com).
 

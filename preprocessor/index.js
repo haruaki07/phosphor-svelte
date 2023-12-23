@@ -5,7 +5,7 @@ import MagicString from "magic-string"
  */
 export function phosphorSvelteOptimize() {
   return {
-    name: "phosphor-svelte-optimizer",
+    name: "phosphor-svelte-optimize",
     script({ attributes, filename, content }) {
       if (!filename || /node_modules/.test(filename)) return
 

@@ -97,14 +97,14 @@ The following will cause the Cube icon to rotate and pulse:
 
 ### Import Optimizer (Experimental)
 
-It is a simple Svelte preprocessor that replace named imports from phosphor-svelte into their source path. This will speed up cold start on development because of dependency pre-bundling, which is more faster.
+It is a simple Svelte preprocessor that rewrite imports named export from phosphor-svelte into their source path. This will speed up cold start on development because of dependency pre-bundling, which is more faster.
 
 > [!WARNING]  
 > Please note that this preprocessor is still experimental and has only been tested on the latest version of Svelte+Vite and SvelteKit.
-> Errors and bugs is to be expected.
+> Errors and bugs are to be expected.
 > Any feedbacks are welcome.
 
-### Usage
+#### Usage
 
 First exclude phosphor-svelte from being pre-bundled by adding `exlude` in `optimizeDeps` on your Vite config.
 
@@ -129,6 +129,24 @@ import { phosphorSvelteOptimize } from "phosphor-svelte/preprocessor"
 export default {
   preprocess: [phosphorSvelteOptimize(), vitePreprocess()],
 }
+```
+
+So, when you import like this:
+
+```html
+<script>
+  import { Cube, Heart, Horse } from "phosphor-svelte"
+</script>
+```
+
+It will be rewritten into this:
+
+```html
+<script>
+  import Cube from "phosphor-svelte/lib/Cube"
+  import Heart from "phosphor-svelte/lib/Heart"
+  import Horse from "phosphor-svelte/lib/Horse"
+</script>
 ```
 
 ## License

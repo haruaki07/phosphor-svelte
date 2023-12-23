@@ -6,7 +6,13 @@
   "types": "./lib/index.d.ts",
   "exports": {
     ".": {
-      "svelte": "./lib/index.js"
+      "svelte": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib/*": {
+      "import": "./lib/*/index.js",
+      "svelte": "./lib/*/*.svelte",
+      "types": "./lib/*/index.d.ts"
     }
   },
   "type": "module",

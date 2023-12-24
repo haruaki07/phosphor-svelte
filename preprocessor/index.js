@@ -27,10 +27,12 @@ export function phosphorSvelteOptimize() {
           (icon) => `import ${icon} from "phosphor-svelte/lib/${icon}";`
         )
 
-        const typeImports = types.map((t) => t.slice(5, t.length)).join(", ")
-        newImports.push(
-          `import type { ${typeImports} } from "phosphor-svelte";`
-        )
+        if (types.length > 0) {
+          const typeImports = types.map((t) => t.slice(5, t.length)).join(", ")
+          newImports.push(
+            `import type { ${typeImports} } from "phosphor-svelte";`
+          )
+        }
 
         output.update(
           match.index,

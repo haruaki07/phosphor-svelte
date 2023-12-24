@@ -36,7 +36,7 @@ export function phosphorSvelteOptimize() {
 
         output.update(
           match.index,
-          match.index + match[0].length,
+          match.index + match[0].length + 1,
           newImports.join("\n")
         )
       }

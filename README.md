@@ -99,7 +99,7 @@ The following will cause the Cube icon to rotate and pulse:
 
 ### Import Optimizer (Experimental)
 
-It is a simple Svelte preprocessor that rewrite imports named export from phosphor-svelte into their source path. This will speed up cold start on development because of dependency pre-bundling, which is more faster.
+It is a simple Svelte preprocessor that rewrite imports named export from phosphor-svelte into their source path. This will speed up compile times during development.
 
 > [!WARNING]  
 > Please note that this preprocessor is still experimental and has only been tested on the latest version of Svelte+Vite and SvelteKit.

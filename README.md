@@ -4,6 +4,8 @@
 
 Phosphor is a flexible icon family for interfaces, diagrams, presentations — whatever, really. More icons at [phosphoricons.com](https://phosphoricons.com).
 
+[![npm](https://img.shields.io/npm/v/phosphor-svelte)](https://npm.im/phosphor-svelte)
+
 ## Installation
 
 ```bash

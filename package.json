@@ -6,18 +6,23 @@
   "types": "./lib/index.d.ts",
   "exports": {
     ".": {
-      "svelte": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "types": "./lib/index.d.ts",
+      "svelte": "./lib/index.js"
     },
     "./lib/*": {
+      "types": "./lib/*/index.d.ts",
       "import": "./lib/*/index.js",
-      "svelte": "./lib/*/*.svelte",
-      "types": "./lib/*/index.d.ts"
+      "svelte": "./lib/*/*.svelte"
+    },
+    "./preprocessor": {
+      "types": "./preprocessor/index.d.ts",
+      "import": "./preprocessor/index.js"
     }
   },
   "type": "module",
   "files": [
-    "lib"
+    "lib",
+    "preprocessor"
   ],
   "scripts": {
     "build": "yarn build:icon",
@@ -54,6 +59,7 @@
     "html-minifier-terser": "^5.1.1",
     "jsdom": "^21.1.0",
     "log-update": "^4.0.0",
+    "magic-string": "^0.30.5",
     "memfs": "^3.4.13",
     "p-map": "^5.5.0",
     "svelte": "^3.55.1",

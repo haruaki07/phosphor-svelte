@@ -10,7 +10,7 @@ export function phosphorSvelteOptimize() {
       if (!filename || /node_modules/.test(filename)) return
 
       const re = new RegExp(
-        /import\s*{([\s\S]*?)\s*}\s*from\s*"phosphor-svelte"/g
+        /import\s*{([\s\S]*?)\s*}\s*from\s*["']phosphor-svelte["']([\s\n]*;)?/g
       )
 
       let output = new MagicString(content, { filename })
@@ -44,8 +44,8 @@ export function phosphorSvelteOptimize() {
 
         output.update(
           match.index,
-          match.index + match[0].length + 1,
-          newImports.join("\n")
+          match.index + match[0].length,
+            newImports.join("\n")
         )
       }
 

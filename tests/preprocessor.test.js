@@ -67,5 +67,47 @@ import IconGear from "phosphor-svelte/lib/Gear";
 
       expect(result.code).toBe(output)
     })
+
+    describe("should parse", () => {
+      it("single quotes", async () => {
+        const processor = phosphorSvelteOptimize()
+        const content = `<script>
+    import { Airplane } from 'phosphor-svelte';
+  </script>\n`;
+
+        const result = await preprocess(content, processor, {
+          filename: "App.svelte",
+        })
+        const output = `<script>
+    import Airplane from "phosphor-svelte/lib/Airplane";
+  </script>\n`
+
+        expect(result.code).toBe(output)
+      })
+
+      it("multiline imports", async () => {
+        const processor = phosphorSvelteOptimize()
+        const content = `<script lang="ts">
+    import { 
+        Airplane,
+        type Hourglass as HourglassAlias,
+        FolderNotch,
+    } from "phosphor-svelte";
+    import { Ghost } from 'phosphor-svelte';
+  </script>\n`;
+
+        const result = await preprocess(content, processor, {
+          filename: "App.svelte",
+        })
+        const output = `<script lang="ts">
+    import Airplane from "phosphor-svelte/lib/Airplane";
+import FolderNotch from "phosphor-svelte/lib/FolderNotch";
+import type { Hourglass as HourglassAlias } from "phosphor-svelte";
+    import Ghost from "phosphor-svelte/lib/Ghost";
+  </script>\n`
+
+        expect(result.code).toBe(output)
+      })
+    })
   })
 })

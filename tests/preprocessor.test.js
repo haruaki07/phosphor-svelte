@@ -108,6 +108,32 @@ import type { Hourglass as HourglassAlias } from "phosphor-svelte";
 
         expect(result.code).toBe(output)
       })
+
+
+      it("only one import statement", async () => {
+        const processor = phosphorSvelteOptimize()
+        const content = `<script lang="ts">
+  import { isFinished } from '$lib/statuses';
+  import { goto, invalidate } from '$app/navigation';
+  import type { PageData } from './$types';
+  import { Tag as TagIcon, ArrowUpRight, GitBranch, GitCommit } from 'phosphor-svelte';
+</script>\n`;
+
+        const result = await preprocess(content, processor, {
+          filename: "App.svelte",
+        })
+        const output = `<script lang="ts">
+  import { isFinished } from '$lib/statuses';
+  import { goto, invalidate } from '$app/navigation';
+  import type { PageData } from './$types';
+  import TagIcon from "phosphor-svelte/lib/Tag";
+import ArrowUpRight from "phosphor-svelte/lib/ArrowUpRight";
+import GitBranch from "phosphor-svelte/lib/GitBranch";
+import GitCommit from "phosphor-svelte/lib/GitCommit";
+</script>\n`
+
+        expect(result.code).toBe(output)
+      })
     })
   })
 })

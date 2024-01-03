@@ -10,12 +10,12 @@ export function phosphorSvelteOptimize() {
       if (!filename || /node_modules/.test(filename)) return
 
       const re = new RegExp(
-        /import\s*{([\s\S]*?)\s*}\s*from\s*["']phosphor-svelte["']([\s\n]*;)?/g
+        /import\s*{(?<imports>[^}]*)}\s*from\s*["']phosphor-svelte["']([\s\n]*;)?/g
       )
 
       let output = new MagicString(content, { filename })
       for (let match of content.matchAll(re)) {
-        const modules = match[1]
+        const modules = match.groups["imports"]
           .trim()
           .replace(/,$/, "")
           .split(",")

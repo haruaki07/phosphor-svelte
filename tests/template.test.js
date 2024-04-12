@@ -61,7 +61,7 @@ describe("definitionsTemplate", () => {
 
     const result = definitionsTemplate(components);
     expect(result)
-      .toEqual(`import { SvelteComponent, IconProps } from "./shared";
+      .toEqual(`import type { SvelteComponent, IconProps } from "./shared.d.ts";
 
 export interface IconContextProps {
   values: IconProps;

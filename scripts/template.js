@@ -62,7 +62,7 @@ ${iconWeights
  * @returns
  */
 export function definitionsTemplate(components) {
-  return `import { SvelteComponent, IconProps } from "./shared.js";
+  return `import type { SvelteComponent, IconProps } from "./shared.d.ts";
 
 export interface IconContextProps {
   values: IconProps;

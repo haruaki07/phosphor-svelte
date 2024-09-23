@@ -1,8 +1,12 @@
 <img src="./meta/phosphor-mark-tight-yellow.png" width="128" align="right" />
 
-# phosphor-svelte
+# Phosphor Svelte
 
-Phosphor is a flexible icon family for interfaces, diagrams, presentations — whatever, really. More icons at [phosphoricons.com](https://phosphoricons.com).
+Unofficial [phosphor-icons](https://github.com/phosphor-icons/core) components for [Svelte](https://svelte.dev).
+
+> Phosphor is a flexible icon family for interfaces, diagrams, presentations — whatever, really.
+
+For a full list of available icons please visit [phosphoricons.com](https://phosphoricons.com).
 
 [![npm](https://img.shields.io/npm/v/phosphor-svelte)](https://npm.im/phosphor-svelte)
 
@@ -22,9 +26,9 @@ npm install --save-dev phosphor-svelte
 
 ```html
 <script>
-  import { Horse, Heart } from "phosphor-svelte"
+  import { Horse, Heart } from "phosphor-svelte";
   // or
-  import Cube from "phosphor-svelte/lib/Cube" // Recommended for faster compiling
+  import Cube from "phosphor-svelte/lib/Cube"; // Recommended for faster compiling
 </script>
 
 <Horse />
@@ -40,7 +44,7 @@ npm install --save-dev phosphor-svelte
 ### Props
 
 - **color?**: `string` – Icon stroke/fill color. Can be any CSS color string, including `hex`, `rgb`, `rgba`, `hsl`, `hsla`, named colors, or the special `currentColor` variable.
-- **size?**: `number | string` – Icon height & width. As with standard React elements, this can be a number, or a string with units in `px`, `%`, `em`, `rem`, `pt`, `cm`, `mm`, `in`.
+- **size?**: `number | string` – Icon height & width. This can be any number, or a string with units in `px`, `%`, `em`, `rem`, `pt`, `cm`, `mm`, `in`.
 - **weight?**: `"thin" | "light" | "regular" | "bold" | "fill" | "duotone"` – Icon weight/style. Can also be used, for example, to "toggle" an icon's state: a rating component could use Stars with `weight="regular"` to denote an empty star, and `weight="fill"` to denote a filled star.
 - **mirrored?**: `boolean` – Flip the icon horizontally. Can be useful in RTL languages where normal icon orientation is not appropriate.
 
@@ -118,7 +122,7 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["phosphor-svelte"],
   },
-})
+});
 ```
 
 Then add the preprocessor into your `svelte.config.js` file before the `vitePreprocess()`.
@@ -126,18 +130,18 @@ Then add the preprocessor into your `svelte.config.js` file before the `vitePrep
 ```javascript
 // svelte.config.js
 
-import { phosphorSvelteOptimize } from "phosphor-svelte/preprocessor"
+import { phosphorSvelteOptimize } from "phosphor-svelte/preprocessor";
 
 export default {
   preprocess: [phosphorSvelteOptimize(), vitePreprocess()],
-}
+};
 ```
 
 So, when you import like this:
 
 ```html
 <script>
-  import { Cube, Heart, Horse } from "phosphor-svelte"
+  import { Cube, Heart, Horse } from "phosphor-svelte";
 </script>
 ```
 
@@ -145,17 +149,23 @@ It will be rewritten into this:
 
 ```html
 <script>
-  import Cube from "phosphor-svelte/lib/Cube"
-  import Heart from "phosphor-svelte/lib/Heart"
-  import Horse from "phosphor-svelte/lib/Horse"
+  import Cube from "phosphor-svelte/lib/Cube";
+  import Heart from "phosphor-svelte/lib/Heart";
+  import Horse from "phosphor-svelte/lib/Horse";
 </script>
 ```
 
-## License
+## Authors
 
-MIT © [Phosphor Icons](https://github.com/phosphor-icons)
+Many thanks go to the original Phosphor Icons authors, [Helena Zhang](https://helenazhang.com/) and [Tobias Fried](https://tobiasfried.com/).
+
+Phosphor Svelte was created by Haruaki, [haruaki07](https://github.com/haruaki07).
 
 ## Knowledge
 
 - [Phosphor React](https://github.com/phosphor-icons/phosphor-react/)
 - [Carbon Icons Svelte](https://github.com/IBM/carbon-icons-svelte/)
+
+## License
+
+[MIT](https://github.com/haruaki07/phosphor-svelte/blob/main/LICENSE)

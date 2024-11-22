@@ -2,7 +2,13 @@ import fs from "fs-extra";
 import logUpdate from "log-update";
 import pMap, { pMapSkip } from "p-map";
 import path from "path";
-import { componentTemplate, definitionsTemplate } from "./template.js";
+import {
+  componentDefinitionTempalte,
+  componentModuleTemplate,
+  componentTemplate,
+  definitionsTemplate,
+  moduleTemplate,
+} from "./template.js";
 import {
   generateIconName,
   getCurrentDirname,
@@ -10,6 +16,7 @@ import {
   getWeights,
   readSVG,
 } from "./utils.js";
+import pkg from "../package.json";
 
 const isTTY = process.stdout.isTTY;
 const __dirname = getCurrentDirname();
@@ -72,11 +79,11 @@ export async function generateComponents(icon, weightVariants) {
     );
     await fs.writeFile(
       path.join(cmpDir, "index.js"),
-      `import ${componentName} from "./${componentName}.svelte"\nexport default ${componentName};`
+      componentModuleTemplate(componentName)
     );
     await fs.writeFile(
       path.join(cmpDir, "index.d.ts"),
-      `export { ${componentName} as default } from "../";\n`
+      componentDefinitionTempalte(componentName)
     );
 
     p.done();
@@ -107,16 +114,10 @@ export async function main() {
     }
   );
 
-  const indexString = components.map(
-    (cmp) => `export { default as ${cmp.name} } from './${cmp.name}';`
-  );
-  indexString.unshift(
-    "export { default as IconContext } from './IconContext';\n"
-  );
-
+  const moduleString = moduleTemplate(components);
   const definitionsString = definitionsTemplate(components);
 
-  await fs.writeFile(path.join(outputDir, "index.js"), indexString.join("\n"));
+  await fs.writeFile(path.join(outputDir, "index.js"), moduleString);
   await fs.writeFile(path.join(outputDir, "index.d.ts"), definitionsString);
 
   if (isTTY) {

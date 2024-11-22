@@ -1,9 +1,9 @@
 <script>
-  import { setContext } from "svelte";
+  import { setIconContext } from "../context";
 
-  export let values = {};
+  let { children, values } = $props();
 
-  setContext("iconCtx", values);
+  setIconContext(values);
 </script>
 
-<slot />
+{@render children?.()}

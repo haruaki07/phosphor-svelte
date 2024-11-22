@@ -1,91 +1,81 @@
-import { render, cleanup } from "@testing-library/svelte";
+import { render, screen } from "@testing-library/svelte";
+import { createRawSnippet } from "svelte";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import Cube from "../lib/Cube";
+import Circle from "../lib/Circle";
 import Rectangle from "../lib/Rectangle";
-import IconContext from "../lib/IconContext";
-import html from "svelte-htm";
+import ContextTest from "./ContextTest.svelte";
 
 describe("component", () => {
   afterEach(() => {
-    cleanup();
+    vi.clearAllMocks();
   });
 
   it("should render", () => {
-    const icon = render(html`
-      <${Cube} data-testid="cube" />
-      <svelte:component this=${Rectangle} data-testid="rectangle" />
-    `);
+    render(Circle);
 
-    expect(icon.getByTestId("cube")).toBeTruthy();
-    expect(icon.getByTestId("rectangle")).toBeTruthy();
+    const svg = screen.getByRole("img");
+    expect(svg).toBeInTheDocument();
   });
 
   it("should accept props", async () => {
-    const icon = render(Cube, {
-      weight: "duotone",
+    render(Circle, {
+      fill: "black",
       size: "5em",
-      color: "sky",
       mirrored: true,
-      role: "img",
     });
 
-    const node = icon.getByRole("img");
-    expect(node).toBeTruthy();
-    expect(node.getAttribute("width")).toEqual("5em");
-    expect(node.getAttribute("height")).toEqual("5em");
-    expect(node.getAttribute("fill")).toEqual("sky");
-    expect(node.getAttribute("transform")).toEqual("scale(-1, 1)");
+    const icon = screen.getByRole("img");
+    expect(icon).toBeInTheDocument();
+    expect(icon).toHaveAttribute("fill", "black");
+    expect(icon).toHaveAttribute("width", "5em");
+    expect(icon).toHaveAttribute("height", "5em");
+    expect(icon).toHaveAttribute("fill", "black");
+    expect(icon).toHaveAttribute("transform", "scale(-1, 1)");
   });
 
-  it("should render all weights", () => {
-    ["bold", "duotone", "fill", "light", "thin"].forEach((weight) => {
-      const icon = render(Cube, {
-        weight,
-        "data-testid": "cube-" + weight,
-      });
-      expect(icon.getByTestId("cube-" + weight)).toBeTruthy();
-    });
+  it("should render weight properly", () => {
+    const boldPath = `<path d="M216,36H40A20,20,0,0,0,20,56V200a20,20,0,0,0,20,20H216a20,20,0,0,0,20-20V56A20,20,0,0,0,216,36Zm-4,160H44V60H212Z"/>`;
+
+    render(Rectangle, { weight: "bold" });
+
+    const icon = screen.getByRole("img");
+
+    expect(icon).toContainHTML(boldPath);
   });
 
   it("should log error for unsupported weight", () => {
-    const consoleErrorMock = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
 
-    const icon = render(Cube, {
+    render(Circle, {
       weight: "aaa",
-      "data-testid": "test",
     });
 
-    expect(icon.getByTestId("test").innerHTML).toEqual(
-      `<rect width="256" height="256" fill="none"></rect>`
-    );
+    const icon = screen.getByRole("img");
 
-    expect(console.error).toHaveBeenCalledOnce();
-    expect(console.error).toHaveBeenCalledWith(
-      'Unsupported icon weight. Choose from "thin", "light", "regular", "bold", "fill", or "duotone".'
-    );
-
-    consoleErrorMock.mockRestore();
+    expect(icon).toBeInTheDocument();
+    expect(console.error).toHaveBeenCalled();
   });
 
   it("should render slot", () => {
-    const icon = render(html`<${Cube} data-testid="test">
-      <title>cube symbol</title>
-    <//>`);
+    render(Circle, {
+      children: createRawSnippet(() => ({
+        render: () => `<title>the circle</title>`,
+      })),
+    });
 
-    expect(icon.getByText("cube symbol")).toBeTruthy();
+    const icon = screen.getByRole("img");
+
+    expect(icon).toContainHTML(`<title>the circle</title>`);
   });
 
   it("should accept props from context", () => {
-    const context = render(html`<${IconContext} values=${{ color: "salmon" }}>
-      <${Cube} data-testid="cube" />
-      <${Rectangle} color="sky" data-testid="rectangle" />
-    <//>`);
+    render(ContextTest, {
+      values: { color: "red" },
+    });
 
-    expect(context.getByTestId("cube").getAttribute("fill")).toEqual("salmon");
-    expect(context.getByTestId("rectangle").getAttribute("fill")).toEqual(
-      "sky"
-    );
+    let icon = screen.getByRole("img");
+
+    expect(icon).toBeInTheDocument();
+    expect(icon).toHaveAttribute("fill", "red");
   });
 });

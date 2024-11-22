@@ -50,11 +50,12 @@
   },
   "homepage": "https://phosphoricons.com",
   "peerDependencies": {
-    "svelte": ">=3"
+    "svelte": "5.x"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^2.0.2",
-    "@testing-library/svelte": "^3.2.2",
+    "@sveltejs/vite-plugin-svelte": "^4.0.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/svelte": "^5.2.4",
     "fs-extra": "^9.0.1",
     "html-minifier-terser": "^5.1.1",
     "jsdom": "^21.1.0",
@@ -62,7 +63,7 @@
     "magic-string": "^0.30.5",
     "memfs": "^3.4.13",
     "p-map": "^5.5.0",
-    "svelte": "^3.55.1",
+    "svelte": "^5.2.0",
     "svelte-htm": "^1.2.0",
     "vitest": "^0.28.4"
   }

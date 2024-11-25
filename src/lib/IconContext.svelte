@@ -1,5 +1,5 @@
 <script>
-  import { setIconContext } from "../context";
+  import { setIconContext } from "./context";
 
   let { children, values } = $props();
 

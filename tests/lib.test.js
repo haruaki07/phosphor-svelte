@@ -1,9 +1,11 @@
+// @vitest-environment jsdom
+
 import { render, screen } from "@testing-library/svelte";
 import { createRawSnippet } from "svelte";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import Circle from "../lib/Circle";
-import Rectangle from "../lib/Rectangle";
-import ContextTest from "./ContextTest.svelte";
+import Circle from "../lib/Circle.svelte";
+import Rectangle from "../lib/Rectangle.svelte";
+import ContextTest from "./__fixtures__/ContextTest.svelte";
 
 describe("component", () => {
   afterEach(() => {

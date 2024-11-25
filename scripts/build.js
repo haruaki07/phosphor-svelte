@@ -4,7 +4,6 @@ import pMap, { pMapSkip } from "p-map";
 import path from "path";
 import {
   componentDefinitionTempalte,
-  componentModuleTemplate,
   componentTemplate,
   definitionsTemplate,
   moduleTemplate,
@@ -16,7 +15,6 @@ import {
   getWeights,
   readSVG,
 } from "./utils.js";
-import pkg from "../package.json";
 
 const isTTY = process.stdout.isTTY;
 const __dirname = getCurrentDirname();
@@ -71,18 +69,12 @@ export async function generateComponents(icon, weightVariants) {
     let componentString = componentTemplate(iconWeights);
     let componentName = generateIconName(iconName);
 
-    const cmpDir = path.join(outputDir, componentName);
-    await fs.ensureDir(cmpDir);
     await fs.writeFile(
-      path.join(cmpDir, `${componentName}.svelte`),
+      path.join(outputDir, `${componentName}.svelte`),
       componentString
     );
     await fs.writeFile(
-      path.join(cmpDir, "index.js"),
-      componentModuleTemplate(componentName)
-    );
-    await fs.writeFile(
-      path.join(cmpDir, "index.d.ts"),
+      path.join(outputDir, `${componentName}.svelte.d.ts`),
       componentDefinitionTempalte(componentName)
     );
 

@@ -2,10 +2,6 @@ import { vol } from "memfs";
 import memfsExtra from "./__mocks__/fs-extra.js";
 import { main as builder } from "../scripts/build.js";
 import { describe, it, vi, beforeAll, expect } from "vitest";
-import fs from "fs/promises";
-import path from "path";
-
-const __dirname = new URL(".", import.meta.url).pathname;
 
 function noop() {
   return void 0;
@@ -26,23 +22,6 @@ beforeAll(async (ctx) => {
     .spyOn(console, "log")
     .mockImplementation(() => noop);
 
-  const [IconContextSvelte, IconContextDts, IconContextJs, SharedDts] =
-    await Promise.all([
-      fs.readFile(
-        path.join(__dirname, "../src/lib/IconContext/IconContext.svelte"),
-        "utf-8"
-      ),
-      fs.readFile(
-        path.join(__dirname, "../src/lib/IconContext/index.d.ts"),
-        "utf-8"
-      ),
-      fs.readFile(
-        path.join(__dirname, "../src/lib/IconContext/index.js"),
-        "utf-8"
-      ),
-      fs.readFile(path.join(__dirname, "../src/lib/shared.d.ts"), "utf-8"),
-    ]);
-
   vol.fromNestedJSON(
     {
       "/tmp/core/assets": {
@@ -56,12 +35,10 @@ beforeAll(async (ctx) => {
         },
       },
       "/tmp/src/lib": {
-        IconContext: {
-          "IconContext.svelte": IconContextSvelte,
-          "index.d.ts": IconContextDts,
-          "index.js": IconContextJs,
-        },
-        "shared.d.ts": SharedDts,
+        "context.js": "",
+        "IconContext.svelte": "",
+        "IconContext.svelte.d.ts": "",
+        "shared.d.ts": "",
       },
     },
     "/tmp"
@@ -77,28 +54,18 @@ beforeAll(async (ctx) => {
   };
 });
 
-describe("build", () => {
-  it("should copy lib dir", async () => {
-    const files = await vol.promises.readdir("/tmp/lib");
-    expect(files).toEqual(
-      expect.arrayContaining(["IconContext", "shared.d.ts"])
-    );
-  });
-
-  it("should generate component", async () => {
-    const files = await vol.promises.readdir("/tmp/lib/Circle");
-    expect(files).toEqual(
-      expect.arrayContaining(["Circle.svelte", "index.d.ts", "index.js"])
-    );
-  });
-
+describe("scripts/build", () => {
   it("should build", async () => {
     const files = await vol.promises.readdir("/tmp/lib");
     expect(files).toEqual(
       expect.arrayContaining([
-        "Circle",
-        "IconContext",
-        "Minus",
+        "Circle.svelte",
+        "Circle.svelte.d.ts",
+        "IconContext.svelte",
+        "IconContext.svelte.d.ts",
+        "Minus.svelte",
+        "Minus.svelte.d.ts",
+        "context.js",
         "index.d.ts",
         "index.js",
         "shared.d.ts",

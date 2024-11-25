@@ -1,7 +1,7 @@
 import type { Snippet } from "svelte";
 import type { SVGAttributes } from "svelte/elements";
 
-declare type IconWeight =
+export type IconWeight =
   | "bold"
   | "duotone"
   | "fill"
@@ -9,7 +9,7 @@ declare type IconWeight =
   | "thin"
   | "regular";
 
-export interface IconProps extends SVGAttributes<SVGSVGElement> {
+export interface IconBaseProps {
   /**
    * @type {string}
    * @default "currentColor"
@@ -32,7 +32,11 @@ export interface IconProps extends SVGAttributes<SVGSVGElement> {
   mirrored?: boolean;
 }
 
+export interface IconComponentProps
+  extends Omit<SVGAttributes<SVGSVGElement>, keyof IconBaseProps>,
+    IconBaseProps {}
+
 export interface IconContextProps {
-  values: IconProps;
+  values: IconComponentProps;
   children?: Snippet;
 }

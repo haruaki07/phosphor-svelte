@@ -5,23 +5,24 @@
  */
 export function componentTemplate(iconWeights) {
   let componentString = `<!-- GENERATED FILE -->
-<script>
-  import { getIconContext } from "../context";
+<script lang="ts">
+  import type { IconComponentProps } from "./shared.d.ts";
+  import { getIconContext } from "./context";
 
   const ctx = getIconContext();
 
-  let { children, ...props } = $props();
+  let { children, ...props }: IconComponentProps = $props();
 
   let weight = $derived(props.weight ?? ctx.weight ?? "regular");
   let color = $derived(props.color ?? ctx.color ?? "currentColor");
   let size = $derived(props.size ?? ctx.size ?? "1em");
   let mirrored = $derived(props.mirrored ?? ctx.mirrored ?? false);
 
-  function svgAttr(obj) {
+  function svgAttr(obj: IconComponentProps) {
     let { weight, color, size, mirrored, ...attrs } = obj;
     return attrs;
   }
-</script>  
+</script>
 
 <svg
   xmlns="http://www.w3.org/2000/svg"
@@ -55,24 +56,20 @@ ${iconWeights
 }
 
 export function definitionsTemplate(components) {
-  let str = `export { default as IconContext } from "./IconContext";\n`;
+  let str = `export { default as IconContext } from "./IconContext.svelte";\n`;
 
   components.forEach((cmp) => {
-    str += `export { default as ${cmp.name} } from "./${cmp.name}";\n`;
+    str += `export { default as ${cmp.name} } from "./${cmp.name}.svelte";\n`;
   });
 
-  str += `export { IconContextProps, IconProps, IconWeight } from "./shared";\n`;
+  str += `export type * from "./shared.d.ts";\n`;
 
   return str;
 }
 
-export function componentModuleTemplate(componentName) {
-  return `import ${componentName} from "./${componentName}.svelte"\nexport default ${componentName};`;
-}
-
 export function componentDefinitionTempalte(componentName) {
   return `import type { Component } from "svelte";
-import type { IconProps } from "../shared";
+import type { IconComponentProps } from "./shared.d.ts";
 
 /**
  *
@@ -88,15 +85,16 @@ import type { IconProps } from "../shared";
  * - \`weight\`: \`{"bold" | "duotone" | "fill" | "light" | "thin" | "regular"}\` - default is \`regular\`
  * - \`mirrored\`: \`{boolean}\` - default is \`false\`
  */
-declare const ${componentName}: Component<IconProps>;
+declare const ${componentName}: Component<IconComponentProps, {}, "">;
+type ${componentName} = ReturnType<typeof ${componentName}>;
 export default ${componentName};\n`;
 }
 
 export function moduleTemplate(components) {
-  let str = "export { default as IconContext } from './IconContext';\n";
+  let str = "export { default as IconContext } from './IconContext.svelte';\n";
 
   components.forEach((cmp) => {
-    str += `export { default as ${cmp.name} } from './${cmp.name}';\n`;
+    str += `export { default as ${cmp.name} } from './${cmp.name}.svelte';\n`;
   });
 
   return str;

@@ -17,13 +17,13 @@ jobs:
         with:
           node-version-file: ".node-version"
           registry-url: https://registry.npmjs.org/
-          cache: "yarn"
+          cache: "npm"
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Build
-        run: yarn build
+        run: npm run build
 
       - name: Test
-        run: yarn test
+        run: npm run test

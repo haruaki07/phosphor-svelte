@@ -1,6 +1,7 @@
 import fs from "fs-extra";
 import { minify } from "html-minifier-terser";
-import { join } from "path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 /**
  * @param {string} assetsDir
@@ -59,5 +60,5 @@ export async function getIcons(assetsDir, weight) {
 }
 
 export function getCurrentDirname() {
-  return new URL(".", import.meta.url).pathname;
+  return dirname(fileURLToPath(import.meta.url));
 }

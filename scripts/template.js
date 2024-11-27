@@ -78,12 +78,10 @@ import type { IconComponentProps } from "./shared.d.ts";
  * <${componentName} color="white" weight="fill" size="20px" mirrored={false} />
  * \`\`\`
  *
- * ### Props
- *
- * - \`color\`: \`{string}\` - default is \`currentColor\`
- * - \`size\`: \`{number | string}\` - default is \`1em\`.
- * - \`weight\`: \`{"bold" | "duotone" | "fill" | "light" | "thin" | "regular"}\` - default is \`regular\`
- * - \`mirrored\`: \`{boolean}\` - default is \`false\`
+ * @prop {string} color
+ * @prop {number | string} size
+ * @prop {"bold" | "duotone" | "fill" | "light" | "thin" | "regular"} weight
+ * @prop {boolean} mirrored
  */
 declare const ${componentName}: Component<IconComponentProps, {}, "">;
 type ${componentName} = ReturnType<typeof ${componentName}>;

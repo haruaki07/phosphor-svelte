@@ -16,33 +16,39 @@ describe("componentTemplate", () => {
 
     const result = componentTemplate(icon);
     expect(result).toEqual(`<!-- GENERATED FILE -->
-<script>
-  import { getContext } from "svelte";
+<script lang="ts">
+  import type { IconComponentProps } from "./shared.d.ts";
+  import { getIconContext } from "./context";
 
-  const {
-    weight: ctxWeight,
-    color: ctxColor,
-    size: ctxSize,
-    mirrored: ctxMirrored,
-    ...restCtx
-  } = getContext("iconCtx") || {};
+  const ctx = getIconContext();
 
-  export let weight = ctxWeight ?? "regular";
-  export let color = ctxColor ?? "currentColor";
-  export let size = ctxSize ?? "1em";
-  export let mirrored = ctxMirrored || false;
+  let { children, ...props }: IconComponentProps = $props();
+
+  let weight = $derived(props.weight ?? ctx.weight ?? "regular");
+  let color = $derived(props.color ?? ctx.color ?? "currentColor");
+  let size = $derived(props.size ?? ctx.size ?? "1em");
+  let mirrored = $derived(props.mirrored ?? ctx.mirrored ?? false);
+
+  function svgAttr(obj: IconComponentProps) {
+    let { weight, color, size, mirrored, ...attrs } = obj;
+    return attrs;
+  }
 </script>
 
-<svg 
-  xmlns="http://www.w3.org/2000/svg" 
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
   width={size}
   height={size}
   fill={color}
-  transform={mirrored ? "scale(-1, 1)" : undefined} 
+  transform={mirrored ? "scale(-1, 1)" : undefined}
   viewBox="0 0 256 256"
-  {...restCtx}
-  {...$$restProps}>
-  <slot/>
+  {...svgAttr(ctx)}
+  {...svgAttr(props)}
+>
+  {#if children}
+    {@render children()}
+  {/if}
   <rect width="256" height="256" fill="none" />
   {#if weight === "regular"}
     <path d="M216,136H40a8,8,0,0,1,0-16H216a8,8,0,0,1,0,16Z"/>
@@ -60,16 +66,11 @@ describe("definitionsTemplate", () => {
     const components = [{ name: "Minus" }, { name: "Plus" }];
 
     const result = definitionsTemplate(components);
-    expect(result)
-      .toEqual(`import type { SvelteComponent, IconProps } from "./shared.d.ts";
-
-export interface IconContextProps {
-  values: IconProps;
-}
-
-export declare class IconContext extends SvelteComponent<IconContextProps> {}
-
-export declare class Minus extends SvelteComponent<IconProps> {}
-export declare class Plus extends SvelteComponent<IconProps> {}`);
+    expect(result).toEqual(
+      `export { default as IconContext } from "./IconContext.svelte";
+export { default as Minus } from "./Minus.svelte";
+export { default as Plus } from "./Plus.svelte";
+export type * from "./shared.d.ts";\n`
+    );
   });
 });

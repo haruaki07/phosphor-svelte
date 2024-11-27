@@ -22,9 +22,9 @@ npm install --save-dev phosphor-svelte
 
 ```html
 <script>
-  import { Horse, Heart } from "phosphor-svelte"
+  import { Horse, Heart } from "phosphor-svelte";
   // or
-  import Cube from "phosphor-svelte/lib/Cube" // Recommended for faster compiling
+  import Cube from "phosphor-svelte/lib/Cube"; // Recommended for faster compiling
 </script>
 
 <Horse />
@@ -33,9 +33,7 @@ npm install --save-dev phosphor-svelte
 ```
 
 > [!WARNING]
-> You might encounter slower compilation when importing phosphor-svelte icons using named exports (`import { X } from "phosphor-svelte"`).
-> This is caused by the [dependency pre-bundling](https://vitejs.dev/guide/dep-pre-bundling.html#dependency-pre-bundling).
-> I've created a preprocessor as a workaround, please read the [Import Optimizer](#import-optimizer-experimental) section.
+> You might encounter slower compilation when importing components using named import (`import { X } from "phosphor-svelte"`).
 
 ### Props
 
@@ -97,58 +95,33 @@ The following will cause the Cube icon to rotate and pulse:
 
 > **Note:** The coordinate space of slotted elements is relative to the contents of the icon `viewBox`, which is a 256x256 square. Only [valid SVG elements](https://developer.mozilla.org/en-US/docs/Web/SVG/Element#SVG_elements_by_category) will be rendered.
 
-### Import Optimizer (Experimental)
+### Import Optimizer
 
-It is a simple Svelte preprocessor that rewrite imports named export from phosphor-svelte into their source path. This will speed up compile times during development.
+A Vite plugin that transforms named import to default import. This will speed up compile times during development.
 
-> [!WARNING]  
-> Please note that this preprocessor is still experimental and has only been tested on the latest version of Svelte+Vite and SvelteKit.
-> Errors and bugs are to be expected.
-> Any feedbacks are welcome.
+```diff
+<script>
+-  import { Cube, Heart, Horse } from "phosphor-svelte";
++  import Cube from "phosphor-svelte/lib/Cube";
++  import Heart from "phosphor-svelte/lib/Heart";
++  import Horse from "phosphor-svelte/lib/Horse";
+</script>
+```
 
 #### Usage
 
-First exclude phosphor-svelte from being pre-bundled by adding `exlude` in `optimizeDeps` on your Vite config.
+Add the plugin into your vite config file.
 
 ```javascript
-// vite.config.js
+// vite.config.ts
+
+import { sveltekit } from "@sveltejs/kit/vite";
+import { defineConfig } from "vite";
+import { sveltePhosphorOptimize } from "phosphor-svelte/vite";
 
 export default defineConfig({
-  plugins: [svelte()],
-  optimizeDeps: {
-    exclude: ["phosphor-svelte"],
-  },
-})
-```
-
-Then add the preprocessor into your `svelte.config.js` file before the `vitePreprocess()`.
-
-```javascript
-// svelte.config.js
-
-import { phosphorSvelteOptimize } from "phosphor-svelte/preprocessor"
-
-export default {
-  preprocess: [phosphorSvelteOptimize(), vitePreprocess()],
-}
-```
-
-So, when you import like this:
-
-```html
-<script>
-  import { Cube, Heart, Horse } from "phosphor-svelte"
-</script>
-```
-
-It will be rewritten into this:
-
-```html
-<script>
-  import Cube from "phosphor-svelte/lib/Cube"
-  import Heart from "phosphor-svelte/lib/Heart"
-  import Horse from "phosphor-svelte/lib/Horse"
-</script>
+  plugins: [sveltePhosphorOptimize(), sveltekit()],
+});
 ```
 
 ## License

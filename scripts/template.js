@@ -5,33 +5,39 @@
  */
 export function componentTemplate(iconWeights) {
   let componentString = `<!-- GENERATED FILE -->
-<script>
-  import { getContext } from "svelte";
+<script lang="ts">
+  import type { IconComponentProps } from "./shared.d.ts";
+  import { getIconContext } from "./context";
 
-  const {
-    weight: ctxWeight,
-    color: ctxColor,
-    size: ctxSize,
-    mirrored: ctxMirrored,
-    ...restCtx
-  } = getContext("iconCtx") || {};
+  const ctx = getIconContext();
 
-  export let weight = ctxWeight ?? "regular";
-  export let color = ctxColor ?? "currentColor";
-  export let size = ctxSize ?? "1em";
-  export let mirrored = ctxMirrored || false;
+  let { children, ...props }: IconComponentProps = $props();
+
+  let weight = $derived(props.weight ?? ctx.weight ?? "regular");
+  let color = $derived(props.color ?? ctx.color ?? "currentColor");
+  let size = $derived(props.size ?? ctx.size ?? "1em");
+  let mirrored = $derived(props.mirrored ?? ctx.mirrored ?? false);
+
+  function svgAttr(obj: IconComponentProps) {
+    let { weight, color, size, mirrored, ...attrs } = obj;
+    return attrs;
+  }
 </script>
 
-<svg 
-  xmlns="http://www.w3.org/2000/svg" 
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
   width={size}
   height={size}
   fill={color}
-  transform={mirrored ? "scale(-1, 1)" : undefined} 
+  transform={mirrored ? "scale(-1, 1)" : undefined}
   viewBox="0 0 256 256"
-  {...restCtx}
-  {...$$restProps}>
-  <slot/>
+  {...svgAttr(ctx)}
+  {...svgAttr(props)}
+>
+  {#if children}
+    {@render children()}
+  {/if}
   <rect width="256" height="256" fill="none" />
 ${iconWeights
   .map(({ weight, svgPath }, i) => {
@@ -49,31 +55,45 @@ ${iconWeights
   return componentString;
 }
 
-/**
- *
- * @param {{
- *   name: string,
- *   iconName: string,
- *   weights: {
- *     svgPath: string,
- *     weight: string
- *   }[]
- * }[]} components
- * @returns
- */
 export function definitionsTemplate(components) {
-  return `import type { SvelteComponent, IconProps } from "./shared.d.ts";
+  let str = `export { default as IconContext } from "./IconContext.svelte";\n`;
 
-export interface IconContextProps {
-  values: IconProps;
+  components.forEach((cmp) => {
+    str += `export { default as ${cmp.name} } from "./${cmp.name}.svelte";\n`;
+  });
+
+  str += `export type * from "./shared.d.ts";\n`;
+
+  return str;
 }
 
-export declare class IconContext extends SvelteComponent<IconContextProps> {}
+export function componentDefinitionTempalte(componentName) {
+  return `import type { Component } from "svelte";
+import type { IconComponentProps } from "./shared.d.ts";
 
-${components
-  .map(
-    (cmp) =>
-      `export declare class ${cmp.name} extends SvelteComponent<IconProps> {}`
-  )
-  .join("\n")}`;
+/**
+ *
+ * @example
+ * \`\`\`svelte
+ * <${componentName} color="white" weight="fill" size="20px" mirrored={false} />
+ * \`\`\`
+ *
+ * @prop {string} color
+ * @prop {number | string} size
+ * @prop {"bold" | "duotone" | "fill" | "light" | "thin" | "regular"} weight
+ * @prop {boolean} mirrored
+ */
+declare const ${componentName}: Component<IconComponentProps, {}, "">;
+type ${componentName} = ReturnType<typeof ${componentName}>;
+export default ${componentName};\n`;
+}
+
+export function moduleTemplate(components) {
+  let str = "export { default as IconContext } from './IconContext.svelte';\n";
+
+  components.forEach((cmp) => {
+    str += `export { default as ${cmp.name} } from './${cmp.name}.svelte';\n`;
+  });
+
+  return str;
 }

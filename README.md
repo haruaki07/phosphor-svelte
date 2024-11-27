@@ -33,9 +33,7 @@ npm install --save-dev phosphor-svelte
 ```
 
 > [!WARNING]
-> You might encounter slower compilation when importing phosphor-svelte icons using named exports (`import { X } from "phosphor-svelte"`).
-> This is caused by the [dependency pre-bundling](https://vitejs.dev/guide/dep-pre-bundling.html#dependency-pre-bundling).
-> I've created a preprocessor as a workaround, please read the [Import Optimizer](#import-optimizer-experimental) section.
+> You might encounter slower compilation when importing components using named import (`import { X } from "phosphor-svelte"`).
 
 ### Props
 

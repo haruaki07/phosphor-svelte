@@ -1,6 +1,8 @@
 import MagicString from "magic-string";
 import { walk } from "estree-walker";
 
+const CSS_RE = /\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)(?:$|\?)/;
+
 /**
  *
  * @returns {import("vite").Plugin}
@@ -15,6 +17,7 @@ export function sveltePhosphorOptimize() {
         )
       )
         return;
+      if (CSS_RE.test(id)) return;
 
       const s = new MagicString(code);
       let root = this.parse(code);

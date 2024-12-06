@@ -1,6 +1,24 @@
 import MagicString from "magic-string";
 import { walk } from "estree-walker";
 
+const EXCLUDE_RE = /\/node_modules\/|\/\.svelte-kit\/|virtual:__sveltekit/;
+const CSS_RE = /\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)(?:$|\?)/;
+
+function parseId(id) {
+  const parts = id.split("?", 2);
+  const filename = parts[0];
+  const rawQuery = parts[1];
+
+  const query = Object.fromEntries(new URLSearchParams(rawQuery));
+  for (const key in query) {
+    if (query[key] === "") {
+      query[key] = true;
+    }
+  }
+
+  return { filename, query };
+}
+
 /**
  *
  * @returns {import("vite").Plugin}
@@ -9,10 +27,11 @@ export function sveltePhosphorOptimize() {
   return {
     name: "vite-plugin-svelte-phosphor-optimize",
     transform(code, id) {
+      const { query, filename } = parseId(id);
       if (
-        ["/node_modules/", "/.svelte-kit/", "virtual:__sveltekit"].some((p) =>
-          id.includes(p)
-        )
+        EXCLUDE_RE.test(filename) ||
+        CSS_RE.test(filename) ||
+        query.type === "style"
       )
         return;
 

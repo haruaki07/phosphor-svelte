@@ -1,6 +1,6 @@
 {
   "name": "phosphor-svelte",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A clean and friendly icon family for Svelte",
   "svelte": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -52,7 +52,7 @@
   "homepage": "https://phosphoricons.com",
   "peerDependencies": {
     "svelte": "^5.0.0 || ^5.0.0-next.96",
-    "vite": "^5.0.0"
+    "vite": ">=5"
   },
   "peerDependenciesMeta": {
     "vite": {

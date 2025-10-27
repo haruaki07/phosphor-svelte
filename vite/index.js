@@ -26,7 +26,7 @@ function parseId(id) {
 export function sveltePhosphorOptimize() {
   return {
     name: "vite-plugin-svelte-phosphor-optimize",
-    transform(code, id) {
+    handler(code, id) {
       const { query, filename } = parseId(id);
       if (
         EXCLUDE_RE.test(filename) ||

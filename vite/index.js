@@ -3,6 +3,7 @@ import { walk } from "estree-walker";
 
 const EXCLUDE_RE = /\/node_modules\/|\/\.svelte-kit\/|virtual:__sveltekit/;
 const CSS_RE = /\.(css|less|sass|scss|styl|stylus|pcss|postcss|sss)(?:$|\?)/;
+const HTML_RE = /\.(html|htm)(?:$|\?)/;
 
 function parseId(id) {
   const parts = id.split("?", 2);
@@ -31,6 +32,7 @@ export function sveltePhosphorOptimize() {
       if (
         EXCLUDE_RE.test(filename) ||
         CSS_RE.test(filename) ||
+        HTML_RE.test(filename) ||
         query.type === "style"
       )
         return;

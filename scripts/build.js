@@ -57,7 +57,7 @@ export async function generateComponents(icon, weightVariants) {
       if (weight !== "regular") fileName += `-${weight}`;
 
       const svgPath = await readSVG(
-        path.join(assetsDir, weight, `${fileName}.svg`)
+        path.join(assetsDir, weight, `${fileName}.svg`),
       );
 
       return {
@@ -68,20 +68,33 @@ export async function generateComponents(icon, weightVariants) {
 
     let componentString = componentTemplate(iconWeights);
     let componentName = generateIconName(iconName);
+    let componentNameWithIcon = `${componentName}Icon`;
 
+    // Write the new preferred component (NameIcon.svelte)
+    await fs.writeFile(
+      path.join(outputDir, `${componentNameWithIcon}.svelte`),
+      componentString,
+    );
+    await fs.writeFile(
+      path.join(outputDir, `${componentNameWithIcon}.svelte.d.ts`),
+      componentDefinitionTempalte(componentNameWithIcon, false),
+    );
+
+    // Write the deprecated component (Name.svelte)
     await fs.writeFile(
       path.join(outputDir, `${componentName}.svelte`),
-      componentString
+      componentString,
     );
     await fs.writeFile(
       path.join(outputDir, `${componentName}.svelte.d.ts`),
-      componentDefinitionTempalte(componentName)
+      componentDefinitionTempalte(componentName, true, componentNameWithIcon),
     );
 
     p.done();
     return {
       iconName: icon,
       name: componentName,
+      nameWithIcon: componentNameWithIcon,
       weights: iconWeights,
     };
   } catch (e) {
@@ -103,7 +116,7 @@ export async function main() {
     (icon) => generateComponents(icon, weights),
     {
       concurrency,
-    }
+    },
   );
 
   const moduleString = moduleTemplate(components);

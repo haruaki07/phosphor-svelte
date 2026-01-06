@@ -22,15 +22,18 @@ npm install --save-dev phosphor-svelte
 
 ```html
 <script>
-  import { Horse, Heart } from "phosphor-svelte";
+  import { HorseIcon, HeartIcon } from "phosphor-svelte";
   // or
-  import Cube from "phosphor-svelte/lib/Cube"; // Recommended for faster compiling
+  import CubeIcon from "phosphor-svelte/lib/CubeIcon"; // Recommended for faster compiling
 </script>
 
-<Horse />
-<Heart color="#AE2983" weight="fill" size="{32}" />
-<Cube color="teal" weight="duotone" />
+<HorseIcon />
+<HeartIcon color="#AE2983" weight="fill" size="{32}" />
+<CubeIcon color="teal" weight="duotone" />
 ```
+
+> [!NOTE]
+> Components are exported with an `Icon` suffix (e.g., `CubeIcon`). The original names without the suffix (e.g., `Cube`) are still available but deprecated and will show warnings in your IDE or Code Editor .
 
 > [!WARNING]
 > You might encounter slower compilation when importing components using named import (`import { X } from "phosphor-svelte"`).
@@ -52,16 +55,16 @@ Apply default style to all icons. Create an IconContext at the root of the app (
   // or
   // import { IconContext } from "phosphor-svelte";
 
-  import Cube from "phosphor-svelte/lib/Cube";
-  import Horse from "phosphor-svelte/lib/Horse";
-  import Heart from "phosphor-svelte/lib/Heart";
+  import CubeIcon from "phosphor-svelte/lib/CubeIcon";
+  import HorseIcon from "phosphor-svelte/lib/HorseIcon";
+  import HeartIcon from "phosphor-svelte/lib/HeartIcon";
 </script>
 
 <IconContext
   values={{ color: 'limegreen', size: 32, mirrored: false, weight: 'bold' }}>
-  <Horse /> <!-- I'm lime-green, 32px, and bold! -->
-  <Heart /> <!-- Me too! -->
-  <Cube color="red" /> <!-- red -->
+  <HorseIcon /> <!-- I'm lime-green, 32px, and bold! -->
+  <HeartIcon /> <!-- Me too! -->
+  <CubeIcon color="red" /> <!-- red -->
 </IconContext>
 ```
 
@@ -74,7 +77,7 @@ Components can accept arbitrary SVG elements as children, so long as they are va
 The following will cause the Cube icon to rotate and pulse:
 
 ```html
-<Cube color="darkorchid" weight="duotone">
+<CubeIcon color="darkorchid" weight="duotone">
   <animate
     attributeName="opacity"
     values="0;1;0"
@@ -90,7 +93,7 @@ The following will cause the Cube icon to rotate and pulse:
     to="360 0 0"
     repeatCount="indefinite"
   ></animateTransform>
-</Cube>
+</CubeIcon>
 ```
 
 > **Note:** The coordinate space of slotted elements is relative to the contents of the icon `viewBox`, which is a 256x256 square. Only [valid SVG elements](https://developer.mozilla.org/en-US/docs/Web/SVG/Element#SVG_elements_by_category) will be rendered.
@@ -101,10 +104,10 @@ A Vite plugin that transforms named import to default import. This will speed up
 
 ```diff
 <script>
--  import { Cube, Heart, Horse } from "phosphor-svelte";
-+  import Cube from "phosphor-svelte/lib/Cube";
-+  import Heart from "phosphor-svelte/lib/Heart";
-+  import Horse from "phosphor-svelte/lib/Horse";
+-  import { CubeIcon, HeartIcon, HorseIcon } from "phosphor-svelte";
++  import CubeIcon from "phosphor-svelte/lib/CubeIcon";
++  import HeartIcon from "phosphor-svelte/lib/HeartIcon";
++  import HorseIcon from "phosphor-svelte/lib/HorseIcon";
 </script>
 ```
 

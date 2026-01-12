@@ -3,8 +3,8 @@
 import { render, screen } from "@testing-library/svelte";
 import { createRawSnippet } from "svelte";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import Circle from "../lib/Circle.svelte";
-import Rectangle from "../lib/Rectangle.svelte";
+import CircleIcon from "../lib/CircleIcon.svelte";
+import RectangleIcon from "../lib/RectangleIcon.svelte";
 import ContextTest from "./__fixtures__/ContextTest.svelte";
 
 describe("component", () => {
@@ -13,14 +13,14 @@ describe("component", () => {
   });
 
   it("should render", () => {
-    render(Circle);
+    render(CircleIcon);
 
     const svg = screen.getByRole("img");
     expect(svg).toBeInTheDocument();
   });
 
   it("should accept props", async () => {
-    render(Circle, {
+    render(CircleIcon, {
       fill: "black",
       size: "5em",
       mirrored: true,
@@ -38,7 +38,7 @@ describe("component", () => {
   it("should render weight properly", () => {
     const boldPath = `<path d="M216,36H40A20,20,0,0,0,20,56V200a20,20,0,0,0,20,20H216a20,20,0,0,0,20-20V56A20,20,0,0,0,216,36Zm-4,160H44V60H212Z"/>`;
 
-    render(Rectangle, { weight: "bold" });
+    render(RectangleIcon, { weight: "bold" });
 
     const icon = screen.getByRole("img");
 
@@ -48,7 +48,7 @@ describe("component", () => {
   it("should log error for unsupported weight", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
 
-    render(Circle, {
+    render(CircleIcon, {
       weight: "aaa",
     });
 
@@ -59,7 +59,7 @@ describe("component", () => {
   });
 
   it("should render slot", () => {
-    render(Circle, {
+    render(CircleIcon, {
       children: createRawSnippet(() => ({
         render: () => `<title>the circle</title>`,
       })),

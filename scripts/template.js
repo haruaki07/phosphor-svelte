@@ -59,6 +59,9 @@ export function definitionsTemplate(components) {
   let str = `export { default as IconContext } from "./IconContext.svelte";\n`;
 
   components.forEach((cmp) => {
+    // New preferred export with Icon suffix
+    str += `export { default as ${cmp.nameWithIcon} } from "./${cmp.nameWithIcon}.svelte";\n`;
+    // Deprecated export without Icon suffix
     str += `export { default as ${cmp.name} } from "./${cmp.name}.svelte";\n`;
   });
 
@@ -67,13 +70,21 @@ export function definitionsTemplate(components) {
   return str;
 }
 
-export function componentDefinitionTempalte(componentName) {
+export function componentDefinitionTempalte(
+  componentName,
+  isDeprecated = false,
+  preferredName = null,
+) {
+  const deprecatedNotice =
+    isDeprecated && preferredName
+      ? `@deprecated Use \`${preferredName}\` instead.\n *\n * `
+      : "";
+
   return `import type { Component } from "svelte";
 import type { IconComponentProps } from "./shared.d.ts";
 
 /**
- *
- * @example
+ * ${deprecatedNotice}@example
  * \`\`\`svelte
  * <${componentName} color="white" weight="fill" size="20px" mirrored={false} />
  * \`\`\`
@@ -92,6 +103,9 @@ export function moduleTemplate(components) {
   let str = "export { default as IconContext } from './IconContext.svelte';\n";
 
   components.forEach((cmp) => {
+    // New preferred export with Icon suffix
+    str += `export { default as ${cmp.nameWithIcon} } from './${cmp.nameWithIcon}.svelte';\n`;
+    // Deprecated export without Icon suffix
     str += `export { default as ${cmp.name} } from './${cmp.name}.svelte';\n`;
   });
 

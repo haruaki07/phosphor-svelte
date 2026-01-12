@@ -1,4 +1,8 @@
-import { componentTemplate, definitionsTemplate } from "../scripts/template.js";
+import {
+  componentTemplate,
+  componentDefinitionTempalte,
+  definitionsTemplate,
+} from "../scripts/template.js";
 import { describe, it, expect } from "vitest";
 
 describe("componentTemplate", () => {
@@ -63,14 +67,69 @@ describe("componentTemplate", () => {
 
 describe("definitionsTemplate", () => {
   it("should generate ts definition", () => {
-    const components = [{ name: "Minus" }, { name: "Plus" }];
+    const components = [
+      { name: "Minus", nameWithIcon: "MinusIcon" },
+      { name: "Plus", nameWithIcon: "PlusIcon" },
+    ];
 
     const result = definitionsTemplate(components);
     expect(result).toEqual(
       `export { default as IconContext } from "./IconContext.svelte";
+export { default as MinusIcon } from "./MinusIcon.svelte";
 export { default as Minus } from "./Minus.svelte";
+export { default as PlusIcon } from "./PlusIcon.svelte";
 export { default as Plus } from "./Plus.svelte";
-export type * from "./shared.d.ts";\n`
+export type * from "./shared.d.ts";\n`,
+    );
+  });
+});
+
+describe("componentDefinitionTempalte", () => {
+  it("should generate non-deprecated component definition", () => {
+    const result = componentDefinitionTempalte("CubeIcon", false);
+    expect(result).toEqual(
+      `import type { Component } from "svelte";
+import type { IconComponentProps } from "./shared.d.ts";
+
+/**
+ * @example
+ * \`\`\`svelte
+ * <CubeIcon color="white" weight="fill" size="20px" mirrored={false} />
+ * \`\`\`
+ *
+ * @prop {string} color
+ * @prop {number | string} size
+ * @prop {"bold" | "duotone" | "fill" | "light" | "thin" | "regular"} weight
+ * @prop {boolean} mirrored
+ */
+declare const CubeIcon: Component<IconComponentProps, {}, "">;
+type CubeIcon = ReturnType<typeof CubeIcon>;
+export default CubeIcon;\n`,
+    );
+  });
+
+  it("should generate deprecated component definition", () => {
+    const result = componentDefinitionTempalte("Cube", true, "CubeIcon");
+    expect(result).toEqual(
+      `import type { Component } from "svelte";
+import type { IconComponentProps } from "./shared.d.ts";
+
+/**
+ * @deprecated Use \`CubeIcon\` instead.
+ *
+ * @example
+ * \`\`\`svelte
+ * <Cube color="white" weight="fill" size="20px" mirrored={false} />
+ * \`\`\`
+ *
+ * @prop {string} color
+ * @prop {number | string} size
+ * @prop {"bold" | "duotone" | "fill" | "light" | "thin" | "regular"} weight
+ * @prop {boolean} mirrored
+ */
+declare const Cube: Component<IconComponentProps, {}, "">;
+type Cube = ReturnType<typeof Cube>;
+export default Cube;\n`,
     );
   });
 });

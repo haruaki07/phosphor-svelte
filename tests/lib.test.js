@@ -81,3 +81,66 @@ describe("component", () => {
     expect(icon).toHaveAttribute("fill", "red");
   });
 });
+
+describe("icon context", () => {
+  afterEach(() => {
+    vi.resetModules();
+    vi.doUnmock("svelte");
+  });
+
+  it("uses a stable icon context key", async () => {
+    const setContext = vi.fn();
+
+    vi.doMock("svelte", () => ({
+      getContext: vi.fn(),
+      hasContext: vi.fn(),
+      setContext,
+    }));
+
+    const { setIconContext } = await import("../src/lib/context.js");
+
+    const values = { color: "red" };
+    setIconContext(values);
+
+    const [[contextKey, contextValue]] = setContext.mock.calls;
+    expect(typeof contextKey).toBe("symbol");
+    expect(contextKey.description).toBe("phosphor-svelte");
+    expect(contextValue).toBe(values);
+  });
+
+  it("returns context value when it exists", async () => {
+    const getContext = vi.fn();
+    const hasContext = vi.fn().mockReturnValue(true);
+
+    vi.doMock("svelte", () => ({
+      getContext,
+      hasContext,
+      setContext: vi.fn(),
+    }));
+
+    const { getIconContext } = await import("../src/lib/context.js");
+
+    const values = { size: "24px" };
+    getContext.mockReturnValue(values);
+
+    expect(getIconContext()).toBe(values);
+
+    const [[hasContextKey]] = hasContext.mock.calls;
+    const [[getContextKey]] = getContext.mock.calls;
+    expect(getContextKey).toBe(hasContextKey);
+  });
+
+  it("returns empty object when context does not exist", async () => {
+    const hasContext = vi.fn().mockReturnValue(false);
+
+    vi.doMock("svelte", () => ({
+      getContext: vi.fn(),
+      hasContext,
+      setContext: vi.fn(),
+    }));
+
+    const { getIconContext } = await import("../src/lib/context.js");
+
+    expect(getIconContext()).toEqual({});
+  });
+});

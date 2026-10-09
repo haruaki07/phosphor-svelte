@@ -1,6 +1,6 @@
 import { getContext, hasContext, setContext } from "svelte";
 
-let contextKey = Symbol("phosphor-svelte");
+let contextKey = Symbol.for("phosphor-svelte:ctx");
 
 export function setIconContext(value) {
   setContext(contextKey, value);

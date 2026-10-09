@@ -16,10 +16,9 @@ jobs:
         with:
           submodules: "true"
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v7
         with:
           node-version-file: ".node-version"
-          registry-url: https://registry.npmjs.org/
           cache: "npm"
 
       - name: Install dependencies
@@ -31,5 +30,4 @@ jobs:
       - name: Test
         run: npm run test
 
-      - run: unset NODE_AUTH_TOKEN # https://github.com/actions/setup-node/issues/1440#issuecomment-3705123143
       - run: npm publish --access public
